@@ -75,7 +75,5 @@ releases:
   values:
   - ../../versionStream/charts/jx3/jx-build-controller/values.yaml.gotmpl
   - jx-values.yaml
-- chart: jx3/jx-pipelines-visualizer
-  namespace: jx
 templates: {}
 renderedvalues: {}
