@@ -25,7 +25,7 @@ spec:
     namespaceSubDomain: -jx.
     tls:
       email: "devops@aurum.com.br"
-      enabled: true
+      enabled: false
       production: false
   repository: nexus
   secretStorage: gsm
