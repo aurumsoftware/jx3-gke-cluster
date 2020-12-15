@@ -13,6 +13,8 @@ repositories:
   url: https://storage.googleapis.com/jenkinsxio/charts
 - name: stable
   url: https://charts.helm.sh/stable
+- name: jenkinsci
+  url: https://charts.jenkins.io
 releases:
 - chart: bitnami/external-dns
   version: 3.2.0
@@ -78,5 +80,8 @@ releases:
 - chart: jenkinsci/jenkins
   version: 2.6.1
   name: jenkins
+  values:
+  - ../../versionStream/charts/jenkinsci/jenkins/values.yaml.gotmpl
+  - jx-values.yaml
 templates: {}
 renderedvalues: {}

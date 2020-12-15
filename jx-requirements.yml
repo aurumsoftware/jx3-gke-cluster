@@ -5,6 +5,8 @@ spec:
     enabled: false
     schedule: ""
   cluster:
+    chartRepository: http://jenkins-x-chartmuseum.jx.svc.cluster.local:8080
+    clusterName: jenkins-x-v1
     devEnvApprovers:
     - TiagoMMSccp
     - gumaestri
@@ -13,10 +15,16 @@ spec:
     gitKind: github
     gitName: github
     gitServer: https://github.com
+    gke:
+      projectNumber: "640638315228"
+    project: aurum-services
     provider: gke
     registry: gcr.io
+    zone: us-east1-b
   environments:
   - key: dev
+    owner: aurumsoftware
+    repository: jx3-gke-cluster
   - key: staging
   - key: production
   ingress:
@@ -24,10 +32,19 @@ spec:
     externalDNS: false
     namespaceSubDomain: -jx.
     tls:
-      email: "devops@aurum.com.br"
+      email: devops@aurum.com.br
       enabled: false
       production: false
+  pipelineUser:
+    username: aurumdevops
   repository: nexus
   secretStorage: gsm
+  storage:
+  - name: logs
+    url: gs://logs-jenkins-x-v1-d6c0bfd37f13
+  - name: reports
+    url: gs://reports-jenkins-x-v1-d6c0bfd37f13
+  - name: repository
+    url: gs://repository-jenkins-x-v1-d6c0bfd37f13
   vault: {}
   webhook: lighthouse
