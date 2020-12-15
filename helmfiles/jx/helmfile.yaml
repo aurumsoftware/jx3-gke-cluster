@@ -75,7 +75,7 @@ releases:
   values:
   - ../../versionStream/charts/jx3/jx-build-controller/values.yaml.gotmpl
   - jx-values.yaml
-- chart: jenkinsci/jenkins
+- chart: jenkins/jenkins
   name: jenkins
 templates: {}
 renderedvalues: {}
