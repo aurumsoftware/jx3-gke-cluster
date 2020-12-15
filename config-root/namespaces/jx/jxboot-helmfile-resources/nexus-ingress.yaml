@@ -16,4 +16,4 @@ spec:
               serviceName: nexus
               servicePort: 80
             path: "/"
-      host: nexus-jx.jx.aurum.com.br
+      host: nexus-jx.aurum.com.br
