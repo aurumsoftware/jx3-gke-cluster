@@ -32,7 +32,7 @@ data:
       <viewsTabBar class="hudson.views.DefaultViewsTabBar"/>
       <myViewsTabBar class="hudson.views.DefaultMyViewsTabBar"/>
       <clouds>
-        <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin="kubernetes@1.27.6">
+        <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin="kubernetes@1.25.7">
           <name>kubernetes</name>
           <defaultsProviderTemplate></defaultsProviderTemplate>
           <templates>
@@ -50,7 +50,7 @@ data:
               <containers>
                 <org.csanchez.jenkins.plugins.kubernetes.ContainerTemplate>
                   <name>jnlp</name>
-                  <image>jenkins/inbound-agent:4.6-1</image>
+                  <image>jenkins/inbound-agent:4.3-4</image>
                   <privileged>false</privileged>
                   <alwaysPullImage>false</alwaysPullImage>
                   <workingDir>/home/jenkins</workingDir>
@@ -135,7 +135,6 @@ data:
       <enabled>false</enabled>
     </jenkins.CLI>
   apply_config.sh: |-
-    set -e
     echo "applying Jenkins configuration"
     echo "apply XML configuration"
     mkdir -p /usr/share/jenkins/ref/secrets/;
@@ -148,19 +147,16 @@ data:
     # Install missing plugins
     cp /var/jenkins_config/plugins.txt /var/jenkins_home;
     rm -rf /usr/share/jenkins/ref/plugins/*.lock
-    version () { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
-    if [ -f "/usr/share/jenkins/jenkins.war" ] && [ -n "$(command -v jenkins-plugin-cli)" 2>/dev/null ] && [ $(version $(jenkins-plugin-cli --version)) -ge $(version "2.1.1") ]; then
-      jenkins-plugin-cli --war "/usr/share/jenkins/jenkins.war" --plugin-file "/var/jenkins_home/plugins.txt";
-    else
-      /usr/local/bin/install-plugins.sh `echo $(cat /var/jenkins_home/plugins.txt)`;
-    fi
+    /usr/local/bin/install-plugins.sh `echo $(cat /var/jenkins_home/plugins.txt)`;
     echo "copy plugins to shared volume"
     # Copy plugins to shared volume
     yes n | cp -i /usr/share/jenkins/ref/plugins/* /var/jenkins_plugins/;
     echo "finished initialization"
   plugins.txt: |-
-    kubernetes:1.27.6
+    kubernetes:1.25.7
+    workflow-job:2.39
     workflow-aggregator:2.6
-    git:4.4.5
-    configuration-as-code:1.46
+    credentials-binding:1.23
+    git:4.2.2
+    configuration-as-code:1.43
     jx-resources:1.0.38

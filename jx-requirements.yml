@@ -37,8 +37,6 @@ spec:
       production: false
   pipelineUser:
     username: aurumdevops
-  adminUser:
-    username: aurumdev
   repository: nexus
   secretStorage: gsm
   storage:

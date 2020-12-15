@@ -6,7 +6,7 @@ metadata:
   namespace: jx
   labels:
     "app.kubernetes.io/name": 'jenkins'
-    "helm.sh/chart": "jenkins-2.19.0"
+    "helm.sh/chart": "jenkins-2.16.0"
     "app.kubernetes.io/managed-by": "Helm"
     "app.kubernetes.io/instance": "jenkins"
     "app.kubernetes.io/component": "jenkins-master"
@@ -29,7 +29,7 @@ spec:
         "app.kubernetes.io/instance": "jenkins"
         "app.kubernetes.io/component": "jenkins-master"
       annotations:
-        checksum/config: 663c857a5f4e9a706ea72c14dd544c671765715207ead1b10c3857407b7cdfe3
+        checksum/config: 088c0cb3bc81060bd74ffd221e8318e3937d564b29b274778895c5811df13c0d
     spec:
       securityContext:
         runAsUser: 1000
@@ -59,6 +59,8 @@ spec:
               cpu: 50m
               memory: 256Mi
           volumeMounts:
+            - mountPath: /tmp
+              name: tmp
             - mountPath: /var/jenkins_home
               name: jenkins-home
             - mountPath: /var/jenkins_config
@@ -80,7 +82,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: JAVA_OPTS
-              value: "-Dcasc.reload.token=$(POD_NAME) "
+              value: -Dcasc.reload.token=$(POD_NAME)
             - name: JENKINS_OPTS
               value: ""
             - name: JENKINS_SLAVE_AGENT_PORT
@@ -133,6 +135,8 @@ spec:
               cpu: 50m
               memory: 256Mi
           volumeMounts:
+            - mountPath: /tmp
+              name: tmp
             - mountPath: /var/jenkins_home
               name: jenkins-home
               readOnly: false
@@ -148,7 +152,7 @@ spec:
             - name: sc-config-volume
               mountPath: /var/jenkins_home/casc_configs
         - name: jenkins-sc-config
-          image: "kiwigrid/k8s-sidecar:0.1.275"
+          image: "kiwigrid/k8s-sidecar:0.1.193"
           imagePullPolicy: IfNotPresent
           env:
             - name: POD_NAME
@@ -175,6 +179,8 @@ spec:
               mountPath: /var/jenkins_home
       volumes:
         - name: plugins
+          emptyDir: {}
+        - name: tmp
           emptyDir: {}
         - name: jenkins-config
           configMap:
