@@ -6,7 +6,7 @@ metadata:
   namespace: jx
   labels:
     "app.kubernetes.io/name": 'jenkins'
-    "helm.sh/chart": "jenkins-2.6.1"
+    "helm.sh/chart": "jenkins-2.19.0"
     "app.kubernetes.io/managed-by": "Helm"
     "app.kubernetes.io/instance": "jenkins"
     "app.kubernetes.io/component": "jenkins-master"
@@ -25,12 +25,11 @@ spec:
     metadata:
       labels:
         "app.kubernetes.io/name": 'jenkins'
-        "helm.sh/chart": "jenkins-2.6.1"
         "app.kubernetes.io/managed-by": "Helm"
         "app.kubernetes.io/instance": "jenkins"
         "app.kubernetes.io/component": "jenkins-master"
       annotations:
-        checksum/config: 8d52b34eec13d12b2dc21754df17ba97acfcc2a7285f25f9891cad07244e947e
+        checksum/config: 663c857a5f4e9a706ea72c14dd544c671765715207ead1b10c3857407b7cdfe3
     spec:
       securityContext:
         runAsUser: 1000
@@ -60,8 +59,6 @@ spec:
               cpu: 50m
               memory: 256Mi
           volumeMounts:
-            - mountPath: /tmp
-              name: tmp
             - mountPath: /var/jenkins_home
               name: jenkins-home
             - mountPath: /var/jenkins_config
@@ -83,7 +80,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: JAVA_OPTS
-              value: "\n-Dcasc.reload.token=$(POD_NAME) \n"
+              value: "-Dcasc.reload.token=$(POD_NAME) "
             - name: JENKINS_OPTS
               value: ""
             - name: JENKINS_SLAVE_AGENT_PORT
@@ -105,6 +102,13 @@ spec:
               name: http
             - containerPort: 50000
               name: slavelistener
+          startupProbe:
+            failureThreshold: 12
+            httpGet:
+              path: '/login'
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
           livenessProbe:
             httpGet:
               path: "/login"
@@ -129,8 +133,6 @@ spec:
               cpu: 50m
               memory: 256Mi
           volumeMounts:
-            - mountPath: /tmp
-              name: tmp
             - mountPath: /var/jenkins_home
               name: jenkins-home
               readOnly: false
@@ -146,7 +148,7 @@ spec:
             - name: sc-config-volume
               mountPath: /var/jenkins_home/casc_configs
         - name: jenkins-sc-config
-          image: "kiwigrid/k8s-sidecar:0.1.144"
+          image: "kiwigrid/k8s-sidecar:0.1.275"
           imagePullPolicy: IfNotPresent
           env:
             - name: POD_NAME
@@ -173,8 +175,6 @@ spec:
               mountPath: /var/jenkins_home
       volumes:
         - name: plugins
-          emptyDir: {}
-        - name: tmp
           emptyDir: {}
         - name: jenkins-config
           configMap:
