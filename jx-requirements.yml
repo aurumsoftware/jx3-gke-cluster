@@ -28,7 +28,7 @@ spec:
   - key: staging
   - key: production
   ingress:
-    domain: "aurum.com.br"
+    domain: aurum.com.br
     externalDNS: false
     namespaceSubDomain: -jx.
     tls:

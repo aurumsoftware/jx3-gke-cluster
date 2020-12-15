@@ -41,7 +41,7 @@ jxRequirements:
   - key: staging
   - key: production
   ingress:
-    domain: jx.aurum.com.br
+    domain: aurum.com.br
     externalDNS: false
     namespaceSubDomain: -secret-infra.
     tls:

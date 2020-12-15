@@ -30,7 +30,7 @@ spec:
         "app.kubernetes.io/instance": "jenkins"
         "app.kubernetes.io/component": "jenkins-master"
       annotations:
-        checksum/config: 6880c090eaa97f010bd92a20241f595b97ae51023321be7ea7744c0275b81c34
+        checksum/config: 8d52b34eec13d12b2dc21754df17ba97acfcc2a7285f25f9891cad07244e947e
     spec:
       securityContext:
         runAsUser: 1000

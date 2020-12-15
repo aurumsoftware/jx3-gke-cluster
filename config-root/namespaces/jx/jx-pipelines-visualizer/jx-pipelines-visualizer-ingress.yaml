@@ -17,7 +17,7 @@ metadata:
   namespace: jx
 spec:
   rules:
-    - host: dashboard-jx.jx.aurum.com.br
+    - host: dashboard-jx.aurum.com.br
       http:
         paths:
           - backend:

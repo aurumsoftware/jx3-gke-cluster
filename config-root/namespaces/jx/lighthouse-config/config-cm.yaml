@@ -45,7 +45,7 @@ data:
         repos:
         - aurumsoftware/jx3-gke-cluster
         - aurumsoftware/astreav2
-      target_url: http://dashboard-jx.jx.aurum.com.br
+      target_url: http://dashboard-jx.aurum.com.br
 kind: ConfigMap
 metadata:
   creationTimestamp: null
