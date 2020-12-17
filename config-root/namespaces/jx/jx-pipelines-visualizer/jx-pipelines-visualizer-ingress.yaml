@@ -23,3 +23,7 @@ spec:
           - backend:
               serviceName: jx-pipelines-visualizer
               servicePort: http
+  tls:
+    - secretName: tls-aurum-com-br-s
+      hosts:
+        - dashboard-jx.aurum.com.br

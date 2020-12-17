@@ -17,3 +17,7 @@ spec:
               servicePort: 8080
             path: "/"
       host: chartmuseum-jx.aurum.com.br
+  tls:
+    - hosts:
+        - chartmuseum-jx.aurum.com.br
+      secretName: "tls-aurum-com-br-s"

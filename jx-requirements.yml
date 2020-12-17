@@ -7,10 +7,6 @@ spec:
   cluster:
     chartRepository: http://jenkins-x-chartmuseum.jx.svc.cluster.local:8080
     clusterName: jenkins-x-v1
-    # devEnvApprovers:
-    # - TiagoMMSccp
-    # - gumaestri
-    # - cunhazord
     environmentGitOwner: aurumsoftware
     gitKind: github
     gitName: github
@@ -29,11 +25,11 @@ spec:
   - key: production
   ingress:
     domain: aurum.com.br
-    externalDNS: false
+    externalDNS: true
     namespaceSubDomain: -jx.
     tls:
       email: devops@aurum.com.br
-      enabled: false
+      enabled: true
       production: false
   pipelineUser:
     username: aurumdevops
