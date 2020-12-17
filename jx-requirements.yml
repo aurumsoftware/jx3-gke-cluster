@@ -8,9 +8,9 @@ spec:
     chartRepository: http://jenkins-x-chartmuseum.jx.svc.cluster.local:8080
     clusterName: jenkins-x-v1
     devEnvApprovers:
-    - TiagoMMSccp
-    - gumaestri
-    - cunhazord
+    # - TiagoMMSccp
+    # - gumaestri
+    # - cunhazord
     environmentGitOwner: aurumsoftware
     gitKind: github
     gitName: github
