@@ -7,7 +7,7 @@ spec:
   cluster:
     chartRepository: http://jenkins-x-chartmuseum.jx.svc.cluster.local:8080
     clusterName: jenkins-x-v1
-    devEnvApprovers:
+    # devEnvApprovers:
     # - TiagoMMSccp
     # - gumaestri
     # - cunhazord
