@@ -77,11 +77,5 @@ releases:
   values:
   - ../../versionStream/charts/jx3/jx-build-controller/values.yaml.gotmpl
   - jx-values.yaml
-# - chart: jenkinsci/jenkins
-#   version: 2.16.0
-#   name: jenkins
-#   values:
-#   - ../../versionStream/charts/jenkinsci/jenkins/values.yaml.gotmpl
-#   - jx-values.yaml
 templates: {}
 renderedvalues: {}
