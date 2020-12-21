@@ -30,7 +30,7 @@ spec:
     tls:
       email: devops@aurum.com.br
       enabled: true
-      production: false
+      production: true
   pipelineUser:
     username: aurumdevops
   repository: nexus
