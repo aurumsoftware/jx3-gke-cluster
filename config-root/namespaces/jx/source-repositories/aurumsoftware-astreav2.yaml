@@ -1,0 +1,22 @@
+apiVersion: jenkins.io/v1
+kind: SourceRepository
+metadata:
+  creationTimestamp: null
+  labels:
+    owner: aurumsoftware
+    provider: github
+    repository: astreav2
+    gitops.jenkins-x.io/pipeline: 'namespaces'
+  name: aurumsoftware-astreav2
+  namespace: jx
+spec:
+  httpCloneURL: https://github.com/aurumsoftware/astreav2.git
+  org: aurumsoftware
+  provider: https://github.com
+  providerKind: github
+  providerName: github
+  repo: astreav2
+  scheduler:
+    kind: ""
+    name: in-repo
+  url: https://github.com/aurumsoftware/astreav2
