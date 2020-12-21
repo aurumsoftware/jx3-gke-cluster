@@ -1,16 +1,16 @@
-# Source: acme/templates/cert-manager-staging-certificate.yaml
+# Source: acme/templates/cert-manager-prod-certificate.yaml
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "tls-aurum-com-br-s"
+  name: "tls-aurum-com-br-p"
   labels:
-    jenkins.io/letsencrypt-service: staging
+    jenkins.io/letsencrypt-service: production
     gitops.jenkins-x.io/pipeline: 'namespaces'
   namespace: jx
 spec:
-  secretName: "tls-aurum-com-br-s"
+  secretName: "tls-aurum-com-br-p"
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-prod
     kind: ClusterIssuer
   commonName: "*.aurum.com.br"
   dnsNames:

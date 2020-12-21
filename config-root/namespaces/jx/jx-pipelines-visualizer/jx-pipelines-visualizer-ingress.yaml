@@ -24,6 +24,6 @@ spec:
               serviceName: jx-pipelines-visualizer
               servicePort: http
   tls:
-    - secretName: tls-aurum-com-br-s
+    - secretName: tls-aurum-com-br-p
       hosts:
         - dashboard-jx.aurum.com.br
