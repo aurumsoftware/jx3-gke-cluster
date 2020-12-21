@@ -20,4 +20,4 @@ spec:
   tls:
     - hosts:
         - chartmuseum-jx.aurum.com.br
-      secretName: "tls-aurum-com-br-s"
+      secretName: "tls-aurum-com-br-p"

@@ -49,7 +49,7 @@ spec:
             - --validating-webhook=:8443
             - --validating-webhook-certificate=/usr/local/certificates/cert
             - --validating-webhook-key=/usr/local/certificates/key
-            - --default-ssl-certificate=jx/tls-aurum-com-br-s
+            - --default-ssl-certificate=jx/tls-aurum-com-br-p
             - --publish-service=nginx/ingress-nginx-controller
           securityContext:
             capabilities:
