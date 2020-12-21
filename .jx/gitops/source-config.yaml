@@ -7,6 +7,7 @@ spec:
   - owner: aurumsoftware
     provider: https://github.com
     providerKind: github
-    repositories:
-    - name: astreav2
+    # repositories:
+    # - name: astreav2
+    #   branch: jenkins-x
     scheduler: in-repo
