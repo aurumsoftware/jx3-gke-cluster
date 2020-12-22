@@ -29,7 +29,7 @@ spec:
         "app.kubernetes.io/instance": "jenkins"
         "app.kubernetes.io/component": "jenkins-master"
       annotations:
-        checksum/config: 088c0cb3bc81060bd74ffd221e8318e3937d564b29b274778895c5811df13c0d
+        checksum/config: 90f630a0ad3aab5be7ccd87abd275debea756fab106b05a4e02e444cfcf8491f
     spec:
       securityContext:
         runAsUser: 1000
@@ -65,8 +65,6 @@ spec:
               name: jenkins-home
             - mountPath: /var/jenkins_config
               name: jenkins-config
-            - mountPath: /usr/share/jenkins/ref/secrets/
-              name: secrets-dir
             - mountPath: /usr/share/jenkins/ref/plugins
               name: plugins
             - mountPath: /var/jenkins_plugins
@@ -143,9 +141,6 @@ spec:
             - mountPath: /var/jenkins_config
               name: jenkins-config
               readOnly: true
-            - mountPath: /usr/share/jenkins/ref/secrets/
-              name: secrets-dir
-              readOnly: false
             - mountPath: /usr/share/jenkins/ref/plugins/
               name: plugin-dir
               readOnly: false
@@ -185,8 +180,6 @@ spec:
         - name: jenkins-config
           configMap:
             name: jenkins
-        - name: secrets-dir
-          emptyDir: {}
         - name: plugin-dir
           emptyDir: {}
         - name: jenkins-home
