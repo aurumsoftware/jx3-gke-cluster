@@ -1,25 +1,22 @@
-# Source: jenkins/templates/jenkins-master-deployment.yaml
+# Source: jenkins/templates/jenkins-controller-statefulset.yaml
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: jenkins
   namespace: jx
   labels:
     "app.kubernetes.io/name": 'jenkins'
-    "helm.sh/chart": "jenkins-2.16.0"
+    "helm.sh/chart": "jenkins-3.0.11"
     "app.kubernetes.io/managed-by": "Helm"
     "app.kubernetes.io/instance": "jenkins"
-    "app.kubernetes.io/component": "jenkins-master"
+    "app.kubernetes.io/component": "jenkins-controller"
     gitops.jenkins-x.io/pipeline: 'namespaces'
-  annotations:
-    wave.pusher.com/update-on-config-change: 'true'
 spec:
+  serviceName: jenkins
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
-      "app.kubernetes.io/component": "jenkins-master"
+      "app.kubernetes.io/component": "jenkins-controller"
       "app.kubernetes.io/instance": "jenkins"
   template:
     metadata:
@@ -27,30 +24,20 @@ spec:
         "app.kubernetes.io/name": 'jenkins'
         "app.kubernetes.io/managed-by": "Helm"
         "app.kubernetes.io/instance": "jenkins"
-        "app.kubernetes.io/component": "jenkins-master"
+        "app.kubernetes.io/component": "jenkins-controller"
       annotations:
-        checksum/config: 90f630a0ad3aab5be7ccd87abd275debea756fab106b05a4e02e444cfcf8491f
+        checksum/config: 5863470588e64656eee39d66130359ca4353685b0ffd2defdd35a2ca5cb7aef0
     spec:
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
+        runAsNonRoot: true
       serviceAccountName: "jenkins"
       initContainers:
-        - name: "copy-default-config"
-          image: "jenkins/jenkins:lts"
+        - name: "init"
+          image: "jenkins/jenkins:2.263.1"
           imagePullPolicy: "Always"
           command: ["sh", "/var/jenkins_config/apply_config.sh"]
-          env:
-            - name: ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: jenkins
-                  key: jenkins-admin-password
-            - name: ADMIN_USER
-              valueFrom:
-                secretKeyRef:
-                  name: jenkins
-                  key: jenkins-admin-user
           resources:
             limits:
               cpu: 2000m
@@ -59,8 +46,6 @@ spec:
               cpu: 50m
               memory: 256Mi
           volumeMounts:
-            - mountPath: /tmp
-              name: tmp
             - mountPath: /var/jenkins_home
               name: jenkins-home
             - mountPath: /var/jenkins_config
@@ -71,37 +56,41 @@ spec:
               name: plugin-dir
       containers:
         - name: jenkins
-          image: "jenkins/jenkins:lts"
+          image: "jenkins/jenkins:2.263.1"
           imagePullPolicy: "Always"
-          args: ["--argumentsRealm.passwd.$(ADMIN_USER)=$(ADMIN_PASSWORD)", "--argumentsRealm.roles.$(ADMIN_USER)=admin", "--httpPort=8080"]
+          args: ["--httpPort=8080"]
           env:
             - name: POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: JAVA_OPTS
-              value: -Dcasc.reload.token=$(POD_NAME)
+              value: "-Dcasc.reload.token=$(POD_NAME) "
             - name: JENKINS_OPTS
               value: ""
             - name: JENKINS_SLAVE_AGENT_PORT
               value: "50000"
-            - name: ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: jenkins
-                  key: jenkins-admin-password
-            - name: ADMIN_USER
-              valueFrom:
-                secretKeyRef:
-                  name: jenkins
-                  key: jenkins-admin-user
             - name: CASC_JENKINS_CONFIG
               value: /var/jenkins_home/casc_configs
           ports:
             - containerPort: 8080
               name: http
             - containerPort: 50000
-              name: slavelistener
+              name: agent-listener
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: '/login'
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: '/login'
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
           startupProbe:
             failureThreshold: 12
             httpGet:
@@ -109,22 +98,6 @@ spec:
               port: http
             periodSeconds: 10
             timeoutSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: "/login"
-              port: http
-            initialDelaySeconds: 90
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-          readinessProbe:
-            httpGet:
-              path: "/login"
-              port: http
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
           resources:
             limits:
               cpu: 2000m
@@ -133,8 +106,6 @@ spec:
               cpu: 50m
               memory: 256Mi
           volumeMounts:
-            - mountPath: /tmp
-              name: tmp
             - mountPath: /var/jenkins_home
               name: jenkins-home
               readOnly: false
@@ -146,8 +117,16 @@ spec:
               readOnly: false
             - name: sc-config-volume
               mountPath: /var/jenkins_home/casc_configs
-        - name: jenkins-sc-config
-          image: "kiwigrid/k8s-sidecar:0.1.193"
+            - name: admin-secret
+              mountPath: /run/secrets/chart-admin-username
+              subPath: jenkins-admin-user
+              readOnly: true
+            - name: admin-secret
+              mountPath: /run/secrets/chart-admin-password
+              subPath: jenkins-admin-password
+              readOnly: true
+        - name: config-reload
+          image: "kiwigrid/k8s-sidecar:0.1.275"
           imagePullPolicy: IfNotPresent
           env:
             - name: POD_NAME
@@ -175,8 +154,6 @@ spec:
       volumes:
         - name: plugins
           emptyDir: {}
-        - name: tmp
-          emptyDir: {}
         - name: jenkins-config
           configMap:
             name: jenkins
@@ -187,3 +164,6 @@ spec:
             claimName: jenkins
         - name: sc-config-volume
           emptyDir: {}
+        - name: admin-secret
+          secret:
+            secretName: jenkins

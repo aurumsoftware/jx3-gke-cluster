@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "jenkins-ui-test-y2uj0"
+  name: "jenkins-ui-test-ew5nz"
   namespace: jx
   annotations:
     "helm.sh/hook": test-success
@@ -11,21 +11,22 @@ metadata:
 spec:
   initContainers:
     - name: "test-framework"
-      image: "dduportal/bats:0.4.0"
+      image: "bats/bats:1.2.1"
       command:
         - "bash"
         - "-c"
+      args:
         - |
-          set -ex
           # copy bats to tools dir
-          cp -R /usr/local/libexec/ /tools/bats/
+          set -ex
+          cp -R /opt/bats /tools/bats/
       volumeMounts:
         - mountPath: /tools
           name: tools
   containers:
     - name: jenkins-ui-test
-      image: jenkins/jenkins:lts
-      command: ["/tools/bats/bats", "-t", "/tests/run.sh"]
+      image: jenkins/jenkins:2.263.1
+      command: ["/tools/bats/bin/bats", "-t", "/tests/run.sh"]
       volumeMounts:
         - mountPath: /tests
           name: tests

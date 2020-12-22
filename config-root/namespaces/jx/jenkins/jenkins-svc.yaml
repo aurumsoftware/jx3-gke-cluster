@@ -1,4 +1,4 @@
-# Source: jenkins/templates/jenkins-master-svc.yaml
+# Source: jenkins/templates/jenkins-controller-svc.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -6,10 +6,10 @@ metadata:
   namespace: jx
   labels:
     "app.kubernetes.io/name": 'jenkins'
-    "helm.sh/chart": "jenkins-2.16.0"
+    "helm.sh/chart": "jenkins-3.0.11"
     "app.kubernetes.io/managed-by": "Helm"
     "app.kubernetes.io/instance": "jenkins"
-    "app.kubernetes.io/component": "jenkins-master"
+    "app.kubernetes.io/component": "jenkins-controller"
     gitops.jenkins-x.io/pipeline: 'namespaces'
 spec:
   ports:
@@ -17,6 +17,6 @@ spec:
       name: http
       targetPort: 8080
   selector:
-    "app.kubernetes.io/component": "jenkins-master"
+    "app.kubernetes.io/component": "jenkins-controller"
     "app.kubernetes.io/instance": "jenkins"
   type: ClusterIP
